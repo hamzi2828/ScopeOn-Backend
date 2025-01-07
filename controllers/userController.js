@@ -117,15 +117,12 @@ exports.forgotPassword = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate a password reset token
     const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Create a password reset link
-    const resetUrl = `http://${process.env.LOCALHOST}/api/users/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.LOCALHOST}/api/users/reset-password/${resetToken}`;
 
-    // Send the reset URL via email (using nodemailer)
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // or your email service
+      service: 'gmail', 
       auth: {
         user: process.env.EMAIL_USER, 
         pass: process.env.EMAIL_PASS, 
@@ -155,19 +152,15 @@ exports.resetPassword = async (req, res) => {
   const { token } = req.params;
 
   try {
-    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
 
-    // Check if the passwords match
     if (password !== confirmPassword) {
       return res.status(400).json({ message: 'Passwords do not match' });
     }
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Find the user and update the password
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
