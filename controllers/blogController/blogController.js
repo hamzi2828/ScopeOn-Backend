@@ -6,7 +6,7 @@ const blogController = {
     createBlog : async (req, res) => {
         const { description, title, tags, metaTitle, metaDescription, metaSchema, category } = req.body;
         console.log('Request Body:', req.body);
-        console.log('Authenticated User:', req.user);
+        console.log('Authenticated User:', req.user.fullname);
         try {
           if (!req.user || !req.user._id) {
             return res.status(401).json({ message: 'Unauthorized: User not authenticated' });
@@ -16,7 +16,7 @@ const blogController = {
           return res.status(404).json({ message: 'User not found' });
             }
           const newBlog = new Blog({
-            author: user._id,
+            author: req.user._id,
             description,
             title,
             tags,
