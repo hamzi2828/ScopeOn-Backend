@@ -1,23 +1,22 @@
-const User = require('../models/User');
+const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const nodemailer = require('nodemailer'); // Add this line to import nodemailer
+const nodemailer = require('nodemailer'); 
 
-dotenv.config();  // Load environment variables from .env file
+dotenv.config();  
 
-// Register a new user
-exports.registerUser = async (req, res) => {
+const userController = {
+
+registerUser : async (req, res) => {
   const { fullname, email, password } = req.body;
 
   try {
-    // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create a new user
     const newUser = new User({ fullname, email, password });
     await newUser.save();
 
@@ -26,11 +25,8 @@ exports.registerUser = async (req, res) => {
     console.error('Error during user registration:', err);
     res.status(500).json({ message: 'Server error' });
   }
-};
-
-// Log in a user
-// Log in a user and save the token in cookies
-exports.loginUser = async (req, res) => {
+},
+loginUser : async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -48,7 +44,7 @@ exports.loginUser = async (req, res) => {
 
     // Generate a JWT
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      { id: user._id, fullname: user.fullname ,email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
@@ -65,11 +61,8 @@ exports.loginUser = async (req, res) => {
     console.error('Error during user login:', err);
     res.status(500).json({ message: 'Server error' });
   }
-};
-
-// Update user details (from token in cookies)
-// Update user details (from token in cookies)
-exports.updateUser = async (req, res) => {
+},
+updateUser : async (req, res) => {
   const { fullname, email } = req.body;
   const userId = req.user.id; // Get the user ID from the decoded token (set by the verifyToken middleware)
 
@@ -104,10 +97,8 @@ exports.updateUser = async (req, res) => {
     console.error('Error during user update:', err);
     res.status(500).json({ message: 'Server error' });
   }
-};
-
-// Forget password API
-exports.forgotPassword = async (req, res) => {
+},
+forgotPassword : async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -143,11 +134,8 @@ exports.forgotPassword = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
-};
-
-
-
-exports.resetPassword = async (req, res) => {
+},
+resetPassword : async (req, res) => {
   const { password, confirmPassword } = req.body;
   const { token } = req.params;
 
@@ -174,4 +162,24 @@ exports.resetPassword = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
+},
+getUserById : async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId).select('-password'); // Exclude password from response
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ user });
+  } catch (err) {
+    console.error('Error fetching user by ID:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+},
 };
+
+module.exports = userController;

@@ -4,9 +4,10 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const userRoutes = require('./routes/userRoutes'); // Adjust path as needed
+const userRoutes = require('./routes/userRoutes/userRoutes'); // Adjust path as needed
 const connectDB = require('./connections/mongo'); // Adjust path as needed
 const cookieParser = require('cookie-parser');
+const blogRoutes = require('./routes/blogRoutes/blogRoutes');
 app.use(cookieParser());
 
 const port = 3000;
@@ -32,8 +33,8 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-app.use('/api/users', userRoutes); // Prefix all user routes with /api/users
-
+app.use('/api/users', userRoutes); 
+app.use('/api/blogs', blogRoutes); 
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
