@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users', userRoutes); 
-app.use('/api/blogs', blogRoutes); 
+app.use('/api/blogs', blogRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
