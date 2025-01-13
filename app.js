@@ -8,6 +8,7 @@ const userRoutes = require('./routes/userRoutes/userRoutes'); // Adjust path as 
 const connectDB = require('./connections/mongo'); // Adjust path as needed
 const cookieParser = require('cookie-parser');
 const blogRoutes = require('./routes/blogRoutes/blogRoutes');
+const productRoutes = require('./routes/productRoutes/productRoutes');
 app.use(cookieParser());
 
 const port = 3000;
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoutes); 
 app.use('/api/blogs', blogRoutes);
+app.use('/api/products', productRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

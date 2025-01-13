@@ -196,7 +196,6 @@ const blogController = {
         res.status(500).json({ message: 'Server error' });
       }
     },
-    
      dislikeBlog : async (req, res) => {
       const { blogId } = req.params;
       const userId = req.user._id; // Assuming you have user authentication, and you can access the user ID
@@ -238,6 +237,48 @@ const blogController = {
         res.status(500).json({ message: 'Server error' });
       }
     },
+    searchBlogByTitle: async (req, res) => { 
+      const { searchQuery } = req.query; // Get the search query from the request
+  const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+  const limit = parseInt(req.query.limit) || 10; // Default to 10 blogs per page if not provided
+
+  try {
+    if (!searchQuery) {
+      return res.status(400).json({ message: 'Search query is required' });
+    }
+
+    // Perform a case-insensitive partial match using regex
+    const blogs = await Blog.find({
+      title: { $regex: searchQuery, $options: 'i' } // 'i' for case-insensitive matching
+    })
+      .skip((page - 1) * limit) // Skip the blogs for the previous pages
+      .limit(limit); // Limit the number of blogs per page
+
+    const totalBlogs = await Blog.countDocuments({
+      title: { $regex: searchQuery, $options: 'i' }
+    }); // Get the total number of blogs matching the search query
+
+    const totalPages = Math.ceil(totalBlogs / limit); // Calculate total pages
+
+    if (blogs.length === 0) {
+      return res.status(404).json({ message: 'No blogs found matching the search query' });
+    }
+
+    res.status(200).json({
+      message: 'Blogs found',
+      blogs: blogs,
+      pagination: {
+        totalBlogs: totalBlogs,
+        totalPages: totalPages,
+        currentPage: page,
+        blogsPerPage: limit
+      }
+    });
+  } catch (err) {
+    console.error('Error searching blogs:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+    },
     
 
   // Comment
@@ -273,9 +314,9 @@ const blogController = {
   }
     }, 
     updateCommentByBlogId: async (req, res) => {
-  const { commentId, userComment } = req.body; // Extract the comment ID and updated comment text
-  const { blogId } = req.params; // Extract the blogId from route parameters
-  const userId = req.user._id; // Extract the authenticated user's ID from `req.user`
+  const { commentId, userComment } = req.body; 
+  const { blogId } = req.params; 
+  const userId = req.user._id; 
 
   try {
     // Find the blog to update the comment in

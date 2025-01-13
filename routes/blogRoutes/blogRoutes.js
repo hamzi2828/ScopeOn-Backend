@@ -12,6 +12,8 @@ router.get('/getAllBlogs', blogController.getAllBlogs);
 router.get('/getBlog/:blogId', blogController.getBlogById);
 router.put('/like/:blogId', verifyToken ,blogController.likeBlog);
 router.put('/dislike/:blogId', verifyToken,blogController.dislikeBlog);
+router.get('/search', blogController.searchBlogByTitle);
+
 
 //Comments
 router.post('/addComment/:blogId', verifyToken ,blogController.addCommentByBlogId); 
