@@ -23,6 +23,8 @@ router.put('/roles/updateRoles/:roleId', verifyToken ,roleController.updateRole)
 router.delete('/roles/deleteRoles/:roleId', verifyToken ,roleController.deleteRole);
 router.get('/roles/getRolesById/:roleId', roleController.getRoleById);
 router.get('/roles/getAllRoles' ,roleController.getAllRoles);
+router.post('/roles/assignRole', verifyToken ,roleController.assignRoleToUser);
+
 
 
 

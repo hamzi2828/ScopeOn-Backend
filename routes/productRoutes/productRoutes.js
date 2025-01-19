@@ -19,6 +19,11 @@ router.get('/getAllProducts', productController.getAllProducts);
 router.get('/getProductById/:id', productController.getProductById);
 
 
-
+//Review
+router.post('/review/createReview', verifyToken ,productController.createReview);
+router.put('/review/updateReview/:reviewId', verifyToken ,productController.updateReview);
+router.delete('/review/deleteReview/:reviewId', verifyToken ,productController.deleteReview);
+router.get('/review/getAllReviews', productController.getAllReviews);
+router.get('/review/getReviewById/:reviewId', productController.getReviewById);
 
 module.exports = router; 

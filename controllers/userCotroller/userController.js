@@ -26,25 +26,27 @@ registerUser : async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 },
-loginUser : async (req, res) => {
+loginUser: async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find the user by email
-    const user = await User.findOne({ email });
+    // Find the user by email and populate the role and permissions
+    const user = await User.findOne({ email }).populate('role'); // Populate the role field
+    console.log(user.role);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     // Generate a JWT
     const token = jwt.sign(
-      { id: user._id , fullname: user.fullname ,email: user.email, role: user.role },
+      { id: user._id, fullname: user.fullname, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
@@ -55,6 +57,8 @@ loginUser : async (req, res) => {
       secure: process.env.NODE_ENV === 'production', // Ensures the cookie is sent over HTTPS in production
       maxAge: 3600000, // 1 hour in milliseconds
     });
+
+    // You now have access to user.role and user.role.permissions
 
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {

@@ -1,4 +1,6 @@
 const Role = require('../../models/Role');
+const User = require('../../models/User'); 
+
 
 
 const roleController = { 
@@ -109,6 +111,34 @@ const roleController = {
           res.status(500).json({ message: 'Server error' });
         }
       },
+
+       assignRoleToUser : async (req, res) => {
+        const { userId, roleId } = req.body; // roleId is now passed directly
+      
+        try {
+          // Find the role by roleId
+          const role = await Role.findById(roleId);
+          if (!role) {
+            return res.status(404).json({ message: 'Role not found' });
+          }
+      
+          // Find the user by userId
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+      
+          // Assign the role to the user
+          user.role = role._id; // Assign role's ObjectId to the user's role field
+          await user.save();
+      
+          return res.status(200).json({ message: 'Role assigned successfully', user });
+        } catch (err) {
+          console.error('Error assigning role:', err);
+          return res.status(500).json({ message: 'Server error' });
+        }
+      },
+      
 };
 
 
