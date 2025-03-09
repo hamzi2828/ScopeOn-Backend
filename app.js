@@ -11,7 +11,7 @@ const blogRoutes = require('./routes/blogRoutes/blogRoutes');
 const productRoutes = require('./routes/productRoutes/productRoutes');
 app.use(cookieParser());
 
-const port = 3000;
+const port = 3001;
 
 
 
