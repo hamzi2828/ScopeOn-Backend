@@ -1,5 +1,4 @@
-const Product = require('../../models/Product');
-const Review = require('../../models/Review');
+const { Product, Review } = require('../../models');
 
 
 

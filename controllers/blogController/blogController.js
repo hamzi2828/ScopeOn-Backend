@@ -1,6 +1,5 @@
 // controllers/blogController.js
-const Blog = require('../../models/Blog'); // Import the Blog model
-const User = require('../../models/User');
+const { Blog, User } = require('../../models'); // Import models from index
 
 const blogController = {
   //Blogs
