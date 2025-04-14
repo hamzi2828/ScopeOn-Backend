@@ -2,50 +2,26 @@
   "version": 2,
   "builds": [
     {
-      "src": "app.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "models/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "controllers/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "routes/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "middleware/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "connections/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "views/**/*.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/app.js"
+      "dest": "/index.js"
     },
     {
       "src": "/api-docs",
-      "dest": "/app.js"
+      "dest": "/index.js"
     },
     {
       "src": "/api-docs/(.*)",
-      "dest": "/app.js"
+      "dest": "/index.js"
     },
     {
       "src": "/",
-      "dest": "/app.js"
+      "dest": "/index.js"
     }
   ],
   "env": {
