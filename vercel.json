@@ -25,10 +25,10 @@
     }
   ],
   "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "LOCALHOST": "@localhost",
-    "EMAIL_USER": "@email_user",
-    "EMAIL_PASS": "@email_pass"
+    "MONGODB_URI": "${MONGODB_URI}",
+    "JWT_SECRET": "${JWT_SECRET}",
+    "LOCALHOST": "${LOCALHOST}",
+    "EMAIL_USER": "${EMAIL_USER}",
+    "EMAIL_PASS": "${EMAIL_PASS}"
   }
 }
