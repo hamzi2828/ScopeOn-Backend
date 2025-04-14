@@ -14,37 +14,43 @@ registerUser : async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'User already exists', statusCode: 400  });
     }
 
     const newUser = new User({ fullname, email, password });
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully', user: { fullname, email } });
+    res
+      .status(201)
+      .json({ message: 'User registered successfully', statusCode: 201, user: { fullname, email } });
   } catch (err) {
     console.error('Error during user registration:', err);
-    res.status(500).json({ message: 'Server error' });
+    res
+    .status(500)
+    .json({ message: 'Server error', statusCode: 500 });
   }
 },
-loginUser : async (req, res) => {
+loginUser: async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find the user by email
-    const user = await User.findOne({ email });
+    // Find the user by email and populate the role and permissions
+    const user = await User.findOne({ email }).populate('role'); // Populate the role field
+    console.log(user.role);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     // Generate a JWT
     const token = jwt.sign(
-      { id: user._id, fullname: user.fullname ,email: user.email, role: user.role },
+      { id: user._id, fullname: user.fullname, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );
@@ -55,6 +61,8 @@ loginUser : async (req, res) => {
       secure: process.env.NODE_ENV === 'production', // Ensures the cookie is sent over HTTPS in production
       maxAge: 3600000, // 1 hour in milliseconds
     });
+
+    // You now have access to user.role and user.role.permissions
 
     res.status(200).json({ message: 'Login successful', token });
   } catch (err) {
