@@ -1,22 +1,24 @@
 const express = require('express');
-const app = express();
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const userRoutes = require('./routes/userRoutes/userRoutes');
-const connectDB = require('./connections/mongo');
 const cookieParser = require('cookie-parser');
-const blogRoutes = require('./routes/blogRoutes/blogRoutes');
-const productRoutes = require('./routes/productRoutes/productRoutes');
-const setupSwagger = require('./swagger/swaggerConfig');
+const connectDB = require('../connections/mongo');
+const userRoutes = require('../routes/userRoutes/userRoutes');
+const blogRoutes = require('../routes/blogRoutes/blogRoutes');
+const productRoutes = require('../routes/productRoutes/productRoutes');
+const setupSwagger = require('../swagger/swaggerConfig');
 
 // Load environment variables
 dotenv.config();
 
+// Initialize Express app
+const app = express();
+
 // Middleware
-app.use(cookieParser());
 app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -31,7 +33,7 @@ app.get('/', (req, res) => {
   res.send('ScopeOn API is running!');
 });
 
-app.use('/api/users', userRoutes); 
+app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/products', productRoutes);
 
@@ -43,10 +45,10 @@ app.use((err, req, res, next) => {
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
-  const port = process.env.PORT || 3001;
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-    console.log(`Swagger API documentation available at http://localhost:${port}/api-docs`);
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Swagger API documentation available at http://localhost:${PORT}/api-docs`);
   });
 }
 
