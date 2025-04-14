@@ -9,6 +9,7 @@ const connectDB = require('./connections/mongo'); // Adjust path as needed
 const cookieParser = require('cookie-parser');
 const blogRoutes = require('./routes/blogRoutes/blogRoutes');
 const productRoutes = require('./routes/productRoutes/productRoutes');
+const setupSwagger = require('./swagger/swaggerConfig');
 app.use(cookieParser());
 
 const port = 3001;
@@ -28,7 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 // Connect to MongoDB
 connectDB();
 
-
+// Initialize Swagger
+setupSwagger(app);
 
 app.get('/', (req, res) => {
   res.send('Hello, World!');
