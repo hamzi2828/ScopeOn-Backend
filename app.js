@@ -27,8 +27,12 @@ connectDB();
 setupSwagger(app);
 
 // Routes
+// Import the welcome page generator
+const getWelcomePage = require('./views/welcome');
+
+// Root endpoint to display welcome page
 app.get('/', (req, res) => {
-  res.send('ScopeOn API is running!');
+  res.send(getWelcomePage());
 });
 
 app.use('/api/users', userRoutes); 
