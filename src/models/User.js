@@ -20,6 +20,30 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters']
   },
+  businessName: {
+    type: String,
+    default: ''
+  },
+  businessAddress: {
+    type: String,
+    default: ''
+  },
+  phoneNumber: {
+    type: String,
+    default: ''
+  },
+  website: {
+    type: String,
+    default: ''
+  },
+  businessType: {
+    type: String,
+    default: ''
+  },
+  userType: {
+    type: String,
+    default: 'customer'
+  },
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role',

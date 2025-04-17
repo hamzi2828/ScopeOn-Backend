@@ -1,4 +1,4 @@
-const { User } = require('../../models/User');
+const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -9,7 +9,20 @@ dotenv.config();
 const userController = {
 
 registerUser : async (req, res) => {
-  const { fullname, email, password } = req.body;
+  // Accept all merchant fields from frontend
+  const {
+    fullname,
+    email,
+    password,
+    businessName,
+    businessAddress,
+    phoneNumber,
+    website,
+    businessType,
+    userType
+  } = req.body;
+
+
 
   try {
     const existingUser = await User.findOne({ email });
@@ -17,8 +30,8 @@ registerUser : async (req, res) => {
       return res.status(400).json({ message: 'User already exists', statusCode: 400  });
     }
 
-    const newUser = new User({ fullname, email, password });
-    await newUser.save();
+    const newUser = new User({ fullname, email, password, businessName, businessAddress, phoneNumber, website, businessType, userType });
+    await newUser.save();   
 
     res
       .status(201)

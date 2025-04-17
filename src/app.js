@@ -35,9 +35,9 @@ app.get('/', (req, res) => {
   res.send(getWelcomePage());
 });
 
-app.use('/api/users', userRoutes); 
-app.use('/api/blogs', blogRoutes);
-app.use('/api/products', productRoutes);
+app.use('/users', userRoutes); 
+app.use('/blogs', blogRoutes);
+app.use('/products', productRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
