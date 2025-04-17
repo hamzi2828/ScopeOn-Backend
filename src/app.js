@@ -4,12 +4,12 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const userRoutes = require('./src/routes/userRoutes/userRoutes');
-const connectDB = require('./connections/mongo');
+const userRoutes = require('./routes/userRoutes/userRoutes');
+const connectDB = require('../connections/mongo');
 const cookieParser = require('cookie-parser');
-const blogRoutes = require('./src/routes/blogRoutes/blogRoutes');
-const productRoutes = require('./src/routes/productRoutes/productRoutes');
-const setupSwagger = require('./swagger/swaggerConfig');
+const blogRoutes = require('./routes/blogRoutes/blogRoutes');
+const productRoutes = require('./routes/productRoutes/productRoutes');
+const setupSwagger = require('../swagger/swaggerConfig');
 
 // Load environment variables
 dotenv.config();
@@ -28,7 +28,7 @@ setupSwagger(app);
 
 // Routes
 // Import the welcome page generator
-const getWelcomePage = require('./views/welcome');
+const getWelcomePage = require('../views/welcome');
 
 // Root endpoint to display welcome page
 app.get('/', (req, res) => {

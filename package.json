@@ -7,8 +7,8 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "dev": "nodemon app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "build": "echo \"Build step not required\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
