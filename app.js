@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const userRoutes = require('./routes/userRoutes/userRoutes');
+const userRoutes = require('./src/routes/userRoutes/userRoutes');
 const connectDB = require('./connections/mongo');
 const cookieParser = require('cookie-parser');
-const blogRoutes = require('./routes/blogRoutes/blogRoutes');
-const productRoutes = require('./routes/productRoutes/productRoutes');
+const blogRoutes = require('./src/routes/blogRoutes/blogRoutes');
+const productRoutes = require('./src/routes/productRoutes/productRoutes');
 const setupSwagger = require('./swagger/swaggerConfig');
 
 // Load environment variables
