@@ -48,7 +48,7 @@ loginUser: async (req, res) => {
 
   try {
     // Find the user by email and populate the role and permissions
-    const user = await User.findOne({ email }).populate('role'); // Populate the role field
+    const user = await User.findOne({ email }); // Populate the role field
     console.log(user.role);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -61,9 +61,10 @@ loginUser: async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Generate a JWT
+    // Exclude password and generate JWT with all other user details
+    const { password: _pw, ...userDetails } = user.toObject();
     const token = jwt.sign(
-      { id: user._id, fullname: user.fullname, email: user.email, role: user.role },
+      userDetails,
       process.env.JWT_SECRET,
       { expiresIn: '1h' } // Token expires in 1 hour
     );

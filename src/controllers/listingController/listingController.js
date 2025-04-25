@@ -1,10 +1,23 @@
 const Listing = require('../../models/Listing');
 
 const listingController = {
+  // Get all listings
+  getAllListings: async (req, res) => {
+    try {
+      const listings = await Listing.find();
+      res.status(200).json(listings);
+    } catch (err) {
+      console.error('Error fetching listings:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  },
+
   createListing: async (req, res) => {
     try {
       // Parse fields
       const { title, description, highlights } = req.body;
+      console.log(req.body);
+      console.log(req.files);
       // Parse amenities and dealOptions (sent as JSON strings)
       let amenities = [];
       let dealOptions = [];

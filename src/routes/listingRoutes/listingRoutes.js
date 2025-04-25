@@ -9,5 +9,6 @@ router.post('/create', upload.array('photos', 20), listingController.createListi
 
 
 
+router.get('/getAll/listings', listingController.getAllListings);
 
 module.exports = router;
