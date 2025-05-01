@@ -20,7 +20,10 @@ const listingSchema = new mongoose.Schema({
   highlights: { type: String },
   amenities: [{ type: String }],
   dealOptions: [dealOptionSchema],
-  photos: [{ type: String }], 
+  photos: [{ type: String }],
+  isFeature: { type: Boolean, default: false },
+  phone: { type: String },
+  website: { type: String },
 }, { timestamps: true });
 
 // Helper to generate slug from title
