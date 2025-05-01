@@ -46,7 +46,7 @@ app.use((err, req, res, next) => {
 
 // For local development
 if (process.env.NODE_ENV !== 'production') {
-  const port = process.env.PORT || 6000;
+  const port = 3001;
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     console.log(`Swagger API documentation available at http://localhost:${port}/api-docs`);
