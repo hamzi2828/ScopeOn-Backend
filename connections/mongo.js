@@ -5,7 +5,7 @@ dotenv.config(); // Load environment variables from .env file
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect('mongodb+srv://zextonsAdmin:12345@zextons.y1to4og.mongodb.net/scopeOn');
     console.log('Connected to MongoDB successfully');
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
