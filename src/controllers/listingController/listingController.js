@@ -169,6 +169,57 @@ const listingController = {
       res.status(500).json({ message: 'Server error' });
     }
   },
+  // Add a review to a listing
+  addReviewToListing: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const {
+        name,
+        email,
+        flexibility,
+        qualityService,
+        valueOfMoney,
+        cleanliness,
+        reviewText,
+        photoUrls = []
+      } = req.body;
+      // Handle uploaded files for review images
+      let uploadedPhotoUrls = [];
+      if (req.files && req.files.length > 0) {
+        uploadedPhotoUrls = req.files.map(f => `/uploads/photos/${f.filename}`);
+      }
+      // Merge URLs from body and uploaded files
+      const allPhotoUrls = Array.isArray(photoUrls)
+        ? [...photoUrls, ...uploadedPhotoUrls]
+        : uploadedPhotoUrls;
+
+      const listing = await Listing.findById(id);
+      if (!listing) {
+        return res.status(404).json({ message: 'Listing not found' });
+      }
+
+      const review = {
+        name,
+        email,
+        flexibility,
+        qualityService,
+        valueOfMoney,
+        cleanliness,
+        reviewText,
+        photoUrls: allPhotoUrls,
+        createdAt: new Date()
+      };
+
+      if (!listing.reviews) listing.reviews = [];
+      listing.reviews.push(review);
+      await listing.save();
+
+      res.status(201).json({ message: 'Review added successfully', review });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to add review', error: error.message });
+    }
+  },
+
   // Delete listing by ID
   deleteListing: async (req, res) => {
     try {

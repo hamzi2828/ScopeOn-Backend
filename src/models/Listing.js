@@ -13,6 +13,18 @@ const dealOptionSchema = new mongoose.Schema({
   giftIcon: Boolean,
 });
 
+const reviewSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  flexibility: { type: Number, required: true },
+  qualityService: { type: Number, required: true },
+  valueOfMoney: { type: Number, required: true },
+  cleanliness: { type: Number, required: true },
+  reviewText: { type: String, required: true },
+  photoUrls: [{ type: String }],
+  createdAt: { type: Date, default: Date.now },
+});
+
 const listingSchema = new mongoose.Schema({
   title: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
@@ -24,6 +36,7 @@ const listingSchema = new mongoose.Schema({
   isFeature: { type: Boolean, default: false },
   phone: { type: String },
   website: { type: String },
+  reviews: [reviewSchema],
 }, { timestamps: true });
 
 // Helper to generate slug from title

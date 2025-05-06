@@ -20,6 +20,9 @@ router.get('/getFeaturedListings', listingController.getFeaturedListings);
 // Get listing by ID
 router.get('/:id', listingController.getListingById);
 
+// Add a review to a listing
+router.post('/:id/reviews', upload.array('photoUrls', 20), listingController.addReviewToListing);
+
 // Toggle isFeature status
 router.patch('/toggle-feature/:id', listingController.toggleFeature);
 
