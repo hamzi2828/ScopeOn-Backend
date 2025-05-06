@@ -105,7 +105,84 @@ const listingController = {
       console.error('Error creating listing:', err);
       res.status(500).json({ message: 'Server error' });
     }
-  }
+  },
+  
+  // Update listing by ID
+  updateListing: async (req, res) => {
+    try {
+      const { id } = req.params;
+      // Parse fields
+      const { title, description, highlights, phone, website } = req.body;
+
+      // Parse amenities and dealOptions (sent as JSON strings)
+      let amenities = [];
+      let dealOptions = [];
+      try {
+        amenities = JSON.parse(req.body.amenities || '[]');
+      } catch (e) {
+        amenities = [];
+      }
+      try {
+        dealOptions = JSON.parse(req.body.dealOptions || '[]');
+      } catch (e) {
+        dealOptions = [];
+      }
+
+      // Find the listing
+      const listing = await Listing.findById(id);
+      if (!listing) {
+        return res.status(404).json({ message: 'Listing not found' });
+      }
+
+      // Update fields
+      listing.title = title;
+      listing.description = description;
+      listing.highlights = highlights;
+      listing.amenities = amenities;
+      listing.dealOptions = dealOptions;
+      listing.phone = phone;
+      listing.website = website;
+
+      // Handle removing photos
+      let photosToRemove = [];
+      if (req.body.photosToRemove) {
+        try {
+          photosToRemove = JSON.parse(req.body.photosToRemove);
+        } catch (e) {
+          photosToRemove = [];
+        }
+      }
+      if (Array.isArray(photosToRemove) && photosToRemove.length > 0) {
+        listing.photos = listing.photos.filter((_, idx) => !photosToRemove.includes(idx));
+      }
+
+      // Handle new photo uploads
+      if (req.files && req.files.length > 0) {
+        const newPhotoPaths = req.files.map(f => `/uploads/photos/${f.filename}`);
+        listing.photos = [...listing.photos, ...newPhotoPaths];
+      }
+
+      await listing.save();
+      res.status(200).json({ message: 'Listing updated successfully', listing });
+    } catch (err) {
+      console.error('Error updating listing:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  },
+  // Delete listing by ID
+  deleteListing: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await Listing.findByIdAndDelete(id);
+      if (!deleted) {
+        return res.status(404).json({ message: 'Listing not found' });
+      }
+      res.status(200).json({ message: 'Listing deleted successfully' });
+    } catch (err) {
+      console.error('Error deleting listing:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  },
 };
 
 module.exports = listingController;

@@ -9,6 +9,9 @@ router.post('/create', upload.array('photos', 20), listingController.createListi
 
 
 
+// Update a listing by ID (PATCH)
+router.patch('/update/:id', upload.array('photos', 20), listingController.updateListing);
+
 router.get('/getAll/listings', listingController.getAllListings);
 
 // Get featured listings
@@ -19,5 +22,8 @@ router.get('/:id', listingController.getListingById);
 
 // Toggle isFeature status
 router.patch('/toggle-feature/:id', listingController.toggleFeature);
+
+// Delete a listing by ID
+router.delete('/:id', listingController.deleteListing);
 
 module.exports = router;
