@@ -11,6 +11,7 @@ const dealOptionSchema = new mongoose.Schema({
   codeInfo: String,
   purchaseInfo: String,
   giftIcon: Boolean,
+  discountType: { type: String, enum: ['percentage', 'flat'], default: 'percentage' },
 });
 
 const reviewSchema = new mongoose.Schema({
@@ -36,6 +37,18 @@ const listingSchema = new mongoose.Schema({
   isFeature: { type: Boolean, default: false },
   phone: { type: String },
   website: { type: String },
+  // Sale period
+  startSaleDate: { type: Date },
+  endSaleDate: { type: Date },
+  // Promo code
+  promoCode: { type: String },
+  promoDiscount: { type: Number }, // percent or amount off
+  promoType: { type: String, enum: ['percent', 'flat'], default: 'percent' },
+  promoValidUntil: { type: Date },
+  // Badge toggles
+  showBestRated: { type: Boolean, default: false },
+  showBought: { type: Boolean, default: false },
+  showSellingFast: { type: Boolean, default: false },
   reviews: [reviewSchema],
 }, { timestamps: true });
 

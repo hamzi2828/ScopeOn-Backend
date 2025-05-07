@@ -88,6 +88,17 @@ const listingController = {
         // Store the complete URL path for easier frontend access
         return `/uploads/photos/${f.filename}`;
       });
+      // Parse badge toggles as booleans
+      const showBestRated = req.body.showBestRated === 'true' || req.body.showBestRated === true;
+      const showBought = req.body.showBought === 'true' || req.body.showBought === true;
+      const showSellingFast = req.body.showSellingFast === 'true' || req.body.showSellingFast === true;
+      // Parse sale dates
+      const startSaleDate = req.body.startSaleDate ? new Date(req.body.startSaleDate) : undefined;
+      const endSaleDate = req.body.endSaleDate ? new Date(req.body.endSaleDate) : undefined;
+      // Parse promo fields
+      const promoCode = req.body.promoCode || undefined;
+      const promoDiscount = req.body.promoDiscount ? Number(req.body.promoDiscount) : undefined;
+      const promoValidUntil = req.body.promoValidUntil ? new Date(req.body.promoValidUntil) : undefined;
       // Create and save listing
       const listing = new Listing({
         title,
@@ -97,7 +108,15 @@ const listingController = {
         dealOptions,
         photos,
         phone,
-        website
+        website,
+        showBestRated,
+        showBought,
+        showSellingFast,
+        startSaleDate,
+        endSaleDate,
+        promoCode,
+        promoDiscount,
+        promoValidUntil
       });
       await listing.save();
       res.status(201).json({ message: 'Listing created successfully', listing });
@@ -128,6 +147,21 @@ const listingController = {
         dealOptions = [];
       }
 
+      // Parse badge toggles as booleans
+      const showBestRated = req.body.showBestRated === 'true' || req.body.showBestRated === true;
+      const showBought = req.body.showBought === 'true' || req.body.showBought === true;
+      const showSellingFast = req.body.showSellingFast === 'true' || req.body.showSellingFast === true;
+      
+      // Parse sale dates
+      const startSaleDate = req.body.startSaleDate ? new Date(req.body.startSaleDate) : undefined;
+      const endSaleDate = req.body.endSaleDate ? new Date(req.body.endSaleDate) : undefined;
+      
+      // Parse promo fields
+      const promoCode = req.body.promoCode || undefined;
+      const promoDiscount = req.body.promoDiscount ? Number(req.body.promoDiscount) : undefined;
+      const promoType = req.body.promoType || 'percent';
+      const promoValidUntil = req.body.promoValidUntil ? new Date(req.body.promoValidUntil) : undefined;
+
       // Find the listing
       const listing = await Listing.findById(id);
       if (!listing) {
@@ -142,6 +176,21 @@ const listingController = {
       listing.dealOptions = dealOptions;
       listing.phone = phone;
       listing.website = website;
+      
+      // Update badge toggles
+      listing.showBestRated = showBestRated;
+      listing.showBought = showBought;
+      listing.showSellingFast = showSellingFast;
+      
+      // Update sale period
+      listing.startSaleDate = startSaleDate;
+      listing.endSaleDate = endSaleDate;
+      
+      // Update promo fields
+      listing.promoCode = promoCode;
+      listing.promoDiscount = promoDiscount;
+      listing.promoType = promoType;
+      listing.promoValidUntil = promoValidUntil;
 
       // Handle removing photos
       let photosToRemove = [];
