@@ -4,7 +4,7 @@ const listingController = {
   // Get all listings
   getAllListings: async (req, res) => {
     try {
-      const listings = await Listing.find();
+      const listings = await Listing.find().populate('businessType');
       res.status(200).json(listings);
     } catch (err) {
       console.error('Error fetching listings:', err);
