@@ -37,6 +37,13 @@ const listingSchema = new mongoose.Schema({
   isFeature: { type: Boolean, default: false },
   phone: { type: String },
   website: { type: String },
+  address: { type: String },
+  businessName: { type: String },
+  businessType: { type: mongoose.Schema.Types.ObjectId, ref: 'BusinessType' },
+  // SEO fields
+  metaTitle: { type: String },
+  metaDescription: { type: String },
+  metaSchema: [{ type: String }],
   // Sale period
   startSaleDate: { type: Date },
   endSaleDate: { type: Date },

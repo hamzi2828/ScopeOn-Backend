@@ -8,6 +8,7 @@ const connectDB = require('./connections/mongo');
 const cookieParser = require('cookie-parser');
 const blogRoutes = require('./src/routes/blogRoutes/blogRoutes');
 const listingRoutes = require('./src/routes/listingRoutes/listingRoutes');
+const businessTypeRoutes = require('./src/routes/businessTypeRoutes');
 const setupSwagger = require('./swagger/swaggerConfig');
 
 // Load environment variables
@@ -37,6 +38,7 @@ app.get('/', (req, res) => {
 app.use('/users', userRoutes); 
 app.use('/blogs', blogRoutes);
 app.use('/listings', listingRoutes);
+app.use('/business-types', businessTypeRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -15,7 +15,7 @@ const listingController = {
   // Get featured listings
   getFeaturedListings: async (req, res) => {
     try {
-      const featuredListings = await Listing.find({ isFeature: true });
+      const featuredListings = await Listing.find({ isFeature: true }).populate('businessType');
       res.status(200).json(featuredListings);
     } catch (err) {
       console.error('Error fetching featured listings:', err);
@@ -27,7 +27,7 @@ const listingController = {
   getListingById: async (req, res) => {
     try {
       const { id } = req.params;
-      const listing = await Listing.findById(id);
+      const listing = await Listing.findById(id).populate('businessType');
       
       if (!listing) {
         return res.status(404).json({ message: 'Listing not found' });
@@ -67,7 +67,7 @@ const listingController = {
   createListing: async (req, res) => {
     try {
       // Parse fields
-      const { title, description, highlights, phone, website } = req.body;
+      const { title, description, highlights, phone, website, address, businessName } = req.body;
       console.log(req.body);
       console.log(req.files);
       // Parse amenities and dealOptions (sent as JSON strings)
@@ -82,6 +82,15 @@ const listingController = {
         dealOptions = JSON.parse(req.body.dealOptions || '[]');
       } catch (e) {
         dealOptions = [];
+      }
+      // Parse meta fields
+      const metaTitle = req.body.metaTitle;
+      const metaDescription = req.body.metaDescription;
+      let metaSchema = [];
+      try {
+        metaSchema = JSON.parse(req.body.metaSchema || '[]');
+      } catch (e) {
+        metaSchema = [];
       }
       // Get uploaded photo filenames with complete path
       const photos = (req.files || []).map(f => {
@@ -99,6 +108,8 @@ const listingController = {
       const promoCode = req.body.promoCode || undefined;
       const promoDiscount = req.body.promoDiscount ? Number(req.body.promoDiscount) : undefined;
       const promoValidUntil = req.body.promoValidUntil ? new Date(req.body.promoValidUntil) : undefined;
+      // Parse businessType
+      const businessType = req.body.businessType || "";
       // Create and save listing
       const listing = new Listing({
         title,
@@ -109,6 +120,12 @@ const listingController = {
         photos,
         phone,
         website,
+        address,
+        businessName,
+        businessType,
+        metaTitle,
+        metaDescription,
+        metaSchema,
         showBestRated,
         showBought,
         showSellingFast,
@@ -131,8 +148,8 @@ const listingController = {
     try {
       const { id } = req.params;
       // Parse fields
-      const { title, description, highlights, phone, website } = req.body;
-
+      const { title, description, highlights, phone, website, address, businessName } = req.body;
+console.log(req.body);
       // Parse amenities and dealOptions (sent as JSON strings)
       let amenities = [];
       let dealOptions = [];
@@ -145,6 +162,16 @@ const listingController = {
         dealOptions = JSON.parse(req.body.dealOptions || '[]');
       } catch (e) {
         dealOptions = [];
+      }
+
+      // Parse meta fields
+      const metaTitle = req.body.metaTitle;
+      const metaDescription = req.body.metaDescription;
+      let metaSchema = [];
+      try {
+        metaSchema = JSON.parse(req.body.metaSchema || '[]');
+      } catch (e) {
+        metaSchema = [];
       }
 
       // Parse badge toggles as booleans
@@ -176,6 +203,15 @@ const listingController = {
       listing.dealOptions = dealOptions;
       listing.phone = phone;
       listing.website = website;
+      listing.address = address;
+      listing.businessName = businessName;
+      // Ensure businessType is set as an ObjectId (ID from frontend)
+      if (req.body.businessType) {
+        listing.businessType = req.body.businessType;
+      }
+      listing.metaTitle = metaTitle;
+      listing.metaDescription = metaDescription;
+      listing.metaSchema = metaSchema;
       
       // Update badge toggles
       listing.showBestRated = showBestRated;
